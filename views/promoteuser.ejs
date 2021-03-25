@@ -1,0 +1,62 @@
+<h1>You can promote users !!</h1>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">User name</th>
+            <th scope="col">User email</th>
+            <th scope="col">User role</th>
+            <th scope="col">Pomote user as</th>
+
+          </tr>
+        </thead>
+        <tbody>
+<% for(var i =0;i<userobj.length;i++) { %>
+          <tr class="table-active">
+            <td><%= userobj[i].name %></td>
+            <td><%= userobj[i].email %></td>
+            <% if(userobj[i].role==0){%>
+                  <td>
+                      common user
+                  </td>
+           <%} %>
+            <% if(userobj[i].role==1){ %>
+
+                <td>
+                    patient
+                </td>
+            <%} %>
+            <%if(userobj[i].role==2){ %>
+
+              <td>
+                  doctor
+              </td>
+          <%} %>
+
+          <%if(userobj[i].role==8990){ %>
+
+            <td>
+                admin
+            </td>
+        <% } %>
+        <td>
+          <form action="/admin/promote" method="POST">
+            <input hidden name="id" value="<%= userobj[i]._id %>"/>
+           <label for="patient">
+            <input type="checkbox" value="1" name="role" />
+            patient
+           </label>
+          <label for="doctor">
+            <input type="checkbox" value="2"  name="role" />
+            doctor
+          </label>
+            <button type="submit" class="primary btn">
+              promote 
+            </button>
+          </form>
+        </td>
+          </tr>
+
+<% }%>
+
+        </tbody>
+      </table>

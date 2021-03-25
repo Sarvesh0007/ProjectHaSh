@@ -1,0 +1,71 @@
+<div class="to-center">
+  <div class="h2 mb-5">Hospital Management System</div>
+  <%- include('partials/dismissiblealert.ejs') %>
+  <div class="row">
+    <div class="col">
+      <form action="/user/register" method="POST">
+        <fieldset>
+          <legend>Register</legend>
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              aria-describedby="namehelp"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="lastname" class="form-label">lastname</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastname"
+              name="lastname"
+              aria-describedby="lastnamehelp"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="useremail" class="form-label">Email address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="useremail"
+              name="email"
+              aria-describedby="emailHelp"
+              required
+            />
+            <div id="emailHelp" class="form-text">
+              We'll never share your email with anyone else.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="userpassword" class="form-label">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="userpassword"
+              name="password"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="confirmpassword" class="form-label">Confirm Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirmpassword"
+              name="confirmpassword"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-success">Submit</button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
