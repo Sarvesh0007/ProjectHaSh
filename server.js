@@ -12,6 +12,7 @@ const { isVerified, isAdmin } = require("./controllers/userAuthentication");
 const userAuthRoutes = require("./routes/userAuthentication");
 const adminRoutes = require("./routes/adminRoutes");
 const patientRoutes = require("./routes/patientRoutes");
+const doctorRoutes = require("./routes/doctorRoutes");
 // for using .env
 require("dotenv").config();
 
@@ -77,6 +78,7 @@ APP.use(function (req, res, next) {
 APP.use("/user", userAuthRoutes);
 APP.use("/admin", adminRoutes);
 APP.use("/patients", patientRoutes);
+APP.use("/doctors", doctorRoutes);
 APP.get("/", (req, res) => {
   return res.render("Home");
 });

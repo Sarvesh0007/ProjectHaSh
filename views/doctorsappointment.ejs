@@ -1,0 +1,24 @@
+<h1>My Appointments</h1>
+
+<div class="container my-5">
+    <div class="row">
+        <% for(var i =0;i<Appointements.length;i++) { %>
+        <div class="col col-lg-4 col-md-8" >
+            <div class="card text-white bg-dark mb-3" style="max-width: 20rem;">
+                <div class="card-header"><%= Appointements[i].patient.name %></div>
+                <div class="card-body">
+                  <h4 class="card-title"><%= Appointements[i].patient.email %></h4>
+                  <h3 class="card-title">Timing is <%= Appointements[i].bookingtime %> </h3>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            <button class="btn btn-large btn-primary">Booked</button>
+            <a href="/doctors/removeappointments/<%= Appointements[i]._id %>" class="btn btn-large btn-danger">Delete</a>
+             
+          </div>         
+        </div>        
+        <% }%>
+    </div>
+
+    </div>
+</div>
+  
