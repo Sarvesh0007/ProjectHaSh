@@ -161,6 +161,14 @@
     console.log("clicked")
   })
 
+  confirmpassword.addEventListener('keyup',function(event){
+    console.log(password.value)
+    if(event.target.value.match(passwordPattern) !== null && password.value === event.target.value){
+        confirmpassword.className = "form-control is-valid"
+    }else{
+      confirmpassword.className = "form-control is-invalid"
+    }
+  })
   password.addEventListener('keyup',function(event){
     if(event.target.value.match(passwordPattern) !== null){
         password.className = "form-control is-valid"
