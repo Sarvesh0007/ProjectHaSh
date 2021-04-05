@@ -11,7 +11,7 @@ const {
 const router = require("express").Router();
 
 router.get("/getallusers", [userSignedin, isVerified, isAdmin], (req, res) => {
-  User.find({ role: 0 }).exec((err, users) => {
+  User.find({ role: 1 }).exec((err, users) => {
     if (err) {
       throw err;
     }
@@ -24,24 +24,14 @@ router.get("/getallusers", [userSignedin, isVerified, isAdmin], (req, res) => {
 
 router.post("/promote", (req, res) => {
   User.findOne({ _id: req.body.id }, (err, user) => {
-    user.role = req.body.role;
     // promote to doctor
     if (req.body.role === "2") {
       const newdoctor = new Doctor({ user: req.body.id });
       if (newdoctor) {
         console.log(newdoctor);
+        user.role = req.body.role;
         user.save();
         newdoctor.save();
-        res.redirect("/admin/getallusers");
-      }
-    }
-    //promote to patient
-    if (req.body.role === "1") {
-      const newpatient = new Patient({ user: req.body.id });
-      if (newpatient) {
-        console.log(newpatient);
-        user.save();
-        newpatient.save();
         res.redirect("/admin/getallusers");
       }
     }

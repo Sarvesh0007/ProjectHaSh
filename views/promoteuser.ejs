@@ -19,16 +19,16 @@
                       common user
                   </td>
            <%} %>
-            <% if(userobj[i].role==1){ %>
+            <!-- <% if(userobj[i].role==1){ %>
 
                 <td>
                     patient
                 </td>
-            <%} %>
+            <%} %> -->
             <%if(userobj[i].role==2){ %>
 
               <td>
-                  doctor
+                  Doctor
               </td>
           <%} %>
 
@@ -41,16 +41,16 @@
         <td>
           <form action="/admin/promote" method="POST">
             <input hidden name="id" value="<%= userobj[i]._id %>"/>
-           <label for="patient">
-            <input type="checkbox" value="1" name="role" />
+          <!--  <label for="patient">
+            <input type="checkbox" id="pcheck" value="1" name="role" />
             patient
-           </label>
+           </label> -->
           <label for="doctor">
-            <input type="checkbox" value="2"  name="role" />
-            doctor
+            <input type="checkbox" id="dcheck" value="2"  name="role" />
+            Doctor
           </label>
             <button type="submit" class="primary btn">
-              promote 
+              Promote 
             </button>
           </form>
         </td>
@@ -60,3 +60,15 @@
 
         </tbody>
       </table>
+<script>
+  let pcheck = document.getElementById("pcheck")
+  let dcheck = document.getElementById("dcheck")
+  let pvalue = false;
+  let dvalue = false;
+  pcheck.addEventListener('change',function(event){
+    dcheck.setAttribute("disabled",true)
+  })
+  dcheck.addEventListener("change",function(event){
+    pcheck.setAttribute("disabled",true)
+  })
+</script>

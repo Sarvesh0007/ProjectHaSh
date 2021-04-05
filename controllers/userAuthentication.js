@@ -23,19 +23,28 @@ exports.signin = (req, res, next) => {
  */
 
 exports.signup = (req, res) => {
-  User.findOne({ email: req.body.email })
-    .then((user) => {
-      if (!user) {
-        // if user does not exist create the user
-        const newUser = new User(req.body);
-        newUser.save();
-        return res.status(200).send({ _id: newUser._id, message: "success" });
-      }
-      return res.status(405).send({ error: "User already exist" });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  console.log(req.body);
+  const mailpattern = new RegExp(
+    "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$"
+  );
+  if (req.body.email.match(mailpattern)) {
+    User.findOne({ email: req.body.email })
+      .then((user) => {
+        if (!user) {
+          // if user does not exist create the user
+          const newUser = new User(req.body);
+          newUser.save();
+          console.log(newUser);
+          return res.redirect("/user/login");
+        }
+        return res.status(405).send({ error: "User already exist" });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    req.flash("error", "invalid email format");
+  }
 };
 
 /**
@@ -46,7 +55,7 @@ exports.signup = (req, res) => {
  */
 exports.isVerified = (req, res, next) => {
   if (!req.isAuthenticated()) {
-    return res.status(401).send("You are not alowed to view this");
+    return res.status(401).send("You are not allowed to view this page");
   }
   next();
 };

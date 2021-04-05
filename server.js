@@ -5,6 +5,7 @@ const session = require("express-session");
 const passport = require("passport");
 const flashconnect = require("connect-flash");
 const { dbConnect } = require("./utils/dbconnect");
+const cors = require("cors");
 
 //controllers handler
 const { isVerified, isAdmin } = require("./controllers/userAuthentication");
@@ -25,6 +26,15 @@ require("./config/passportlocal-startegy")(passport);
 const APP = express();
 const PORT = process.env.PORT || 3000;
 
+// cors enabled
+
+APP.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
 // database connection
@@ -53,7 +63,7 @@ APP.use(
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
-    cookie: { _expires: 120000 },
+    cookie: { _expires: 600000 },
   })
 );
 APP.use(flashconnect());

@@ -3,6 +3,35 @@
   <%- include('partials/dismissiblealert.ejs') %>
   <div class="row">
     <div class="col">
+        <div class="content">
+        <form id="login">
+       <div class="form-group" id="channel-select">
+            <div class="form-check form-check-inline" hidden>
+              <input class="form-check-input" type="radio" name="channel" id="channel-sms" value="sms" checked>
+              <label class="form-check-label" for="channel-sms">SMS</label>
+            </div>
+          <div class="form-group phone-input">
+            <p>Enter your phone number:</p>
+            <input
+              type="tel"
+              id="phone_number"
+              value="+919919244896"
+              class="form-control" />
+          </div>
+          <div class="form-group locale-input" hidden>
+            <p>Select your preferred language:</p>
+            <select class="form-control" id="select-locale">
+            </select>
+          </div>
+          <div class="form-group">
+            <input
+              type="submit"
+              class="btn btn-primary"
+              value="Verify"/>
+          </div>
+        </form>
+        <span id="form-error" class="text-danger"></span>
+      </div>
       <form action="/user/register" method="POST">
         <fieldset>
           <legend>Register</legend>
@@ -28,6 +57,15 @@
               required
             />
           </div>
+          <div class="mb-3" hidden>
+            <label for="user_phone" >phone</label>
+            <input
+              type="tel"
+              id="userphone"
+              name="phone"
+              aria-describedby="phoneHelp"
+            />
+          </div>
           <div class="mb-3">
             <label for="useremail" class="form-label">Email address</label>
             <input
@@ -51,6 +89,12 @@
               name="password"
               required
             />
+            <div id="passwordHep" class="form-text">
+              <b>
+                Your password should contain atleast one <br/>
+                special symbol after the 8th character! !,_,# or @
+              </b>
+            </div>
           </div>
           <div class="mb-3">
             <label for="confirmpassword" class="form-label">Confirm Password</label>
@@ -63,9 +107,222 @@
             />
           </div>
 
-          <button type="submit" class="btn btn-success">Submit</button>
+          <button type="submit"  id="registerbutton" class="btn btn-success">Submit</button>
         </fieldset>
       </form>
+    
+      <div class="modal" id="verification_modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="result-message"></div>
+                  <div>
+                    <form id="verification" class="input-group input-group-lg">
+                      <input
+                        type="text"
+                        class="form-control input-lg"
+                        id="verification_code"
+                        placeholder="Enter the token sent to your device"
+                        required/>
+                      <span class="input-group-btn">
+                        <button 
+                          class="btn btn-primary btn-lg" 
+                          type="submit">Verify
+                        </button>
+                      </span>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
     </div>
   </div>
 </div>
+<script>
+  let formdisabled = true;
+  let name = document.getElementById("name");
+  let lastname = document.getElementById("lastname");
+  let password = document.getElementById("userpassword");
+  let confirmpassword = document.getElementById("confirmpassword");
+  let useremail = document.getElementById("useremail");
+  let emailhelp = document.getElementById("emailHelp");
+  let registerbutton = document.getElementById("registerbutton");
+  let twilio_phone = document.getElementById("phone_number");
+  let user_phone = document.getElementById("userphone")
+  let emailPattern = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.(?:[a-zA-Z0-9-]+)$")
+  let passwordPattern = new RegExp("^.{8,}[@#!_].*$");
+
+  registerbutton.addEventListener("click",function(event){
+    console.log("clicked")
+  })
+
+  password.addEventListener('keyup',function(event){
+    if(event.target.value.match(passwordPattern) !== null){
+        password.className = "form-control is-valid"
+    }else{
+      password.className = "form-control is-invalid"
+    }
+  })
+
+  twilio_phone.addEventListener("keyup",function(event){
+    user_phone.value = event.target.value;
+    console.log(user_phone.value)
+  })
+
+
+
+  useremail.addEventListener('keyup',function(event){
+    if(event.target.value.match(emailPattern) === null){
+      useremail.className = "form-control is-invalid"
+      registerbutton.setAttribute("disabled","true")
+    }else{
+ 
+      registerbutton.removeAttribute("disabled")
+      useremail.className = "form-control is-valid"
+
+    }
+  })
+  if(formdisabled){
+    useremail.setAttribute("disabled",formdisabled)
+    name.setAttribute("disabled",formdisabled)
+    lastname.setAttribute("disabled",formdisabled)
+    password.setAttribute("disabled",formdisabled)
+    confirmpassword.setAttribute("disabled",formdisabled)
+  }
+  
+  // Handle international prefixes, format phone input field
+    // Uses intl-tel-input library
+    const phoneInputField = document.querySelector("#phone_number");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+      // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+      preferredCountries: ["in", "us", "co", "de"],
+      separateDialCode: true,
+      utilsScript:
+        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js"
+    });
+
+    $("#channel-select").change(function() {
+      const channel = $("input[name='channel']:checked").val();
+      if (channel === "email") {
+        $(".phone-input").hide();
+        $(".email-input").show();
+      } else if (channel === "sms" || channel === "call") {
+        $(".phone-input").show();
+        $(".email-input").hide();
+      }
+    });
+
+    function showVerificationStatus(alertType, message) {
+      var content = $(".result-message");
+      content.empty();
+      content.append($("<div>")
+        .addClass(`alert alert-${alertType}`)
+        .attr("role", "alert")
+        .text(message))
+    }
+
+    function showVerificationStartError(error) {
+      var content = $("#form-error");
+      content.empty();
+      content.append(`Error: ${error}`);
+    }
+
+    var to;
+
+    $("#login").submit(function(event) {
+      event.preventDefault();
+
+      const channel = $("input[name='channel']:checked").val();
+      const locale = $("#select-locale").val();
+      to = (channel === "email") ? $("#email").val() : phoneInput.getNumber();
+
+      // Twilio functions do not accept multipart/form-data
+      const data = new URLSearchParams();
+      data.append("to", to);
+      data.append("channel", channel);
+      data.append("locale", locale);
+
+      fetch("https://verify-3893-8fwybq.twil.io/start-verify", {
+          method: "POST",
+          body: data
+        })
+        .then(response => {
+          const content = $(".result-message");
+          content.empty();
+          
+          return response.json()
+        })
+        .then(json => {
+          if (json.success) {
+            $("#form-error").empty();
+            $(".modal").modal("show");
+            console.log("Successfully sent token.");
+          } else {
+            console.log(json.error);
+            showVerificationStartError(
+              `${json.error.message} <a href="${json.error.moreInfo}">[more info]</a>`);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          showVerificationStartError("Error starting verification.");
+        });
+    });
+
+    $("#verification").submit(function(event) {
+      event.preventDefault();
+      const code = $("#verification_code").val();
+
+      // Twilio functions do not accept multipart/form-data
+      const data = new URLSearchParams();
+      data.append("to", to);
+      data.append("verification_code", code);
+
+      fetch("https://verify-3893-8fwybq.twil.io/check-verify", {
+          method: 'POST',
+          body: data
+        })
+        .then(response => response.json())
+        .then(json => {
+          console.log(json,'response from check-verify')
+          formdisabled = json.success ? json.success : false;
+          
+          if (json.success) {
+            twilio_phone.setAttribute("disabled",true)
+            twilio_phone.className = "form-control is-valid"
+            useremail.removeAttribute("disabled")
+            name.removeAttribute("disabled")
+            lastname.removeAttribute("disabled")
+            password.removeAttribute("disabled")
+            confirmpassword.removeAttribute("disabled")
+            showVerificationStatus("success", json.message);
+            $("#verification_code").val("");
+          } else {
+            showVerificationStatus("danger", json.message);
+            $("#verification_code").val("");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          showVerificationStatus("danger", "Something went wrong!");
+          $("#verification_code").val("");
+        });
+    });
+
+    const locales = [
+      { text: "English", value: "en" },
+    ];
+
+    const selectLocale = $("#select-locale");
+
+    locales.forEach(l => {
+      selectLocale.append($("<option>")
+        .val(l.value)
+        .text(l.text))
+    });
+</script>

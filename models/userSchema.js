@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     // TODO: CoMe BaCk here this is critical
     enc_password: {
       type: String,
@@ -31,8 +36,32 @@ const userSchema = new mongoose.Schema(
     // 0 common user , 1 patient,2 doctor , 8990 admin
     role: {
       type: Number,
-      default: 0,
+      default: 1,
     },
+    Address: String,
+    Prscriptions: [
+      {
+        Disease: String,
+        Medicine: [
+          {
+            Name: String,
+            Dosage: {
+              type: String,
+              enum: ["Day", "Afternoon", "Evening", "Night"],
+            },
+          },
+        ],
+      },
+    ],
+    appointments: [
+      {
+        doctor: {
+          type: mongoose.SchemaTypes.ObjectId,
+          ref: "User",
+        },
+        bookingtime: String,
+      },
+    ],
   },
   { timestamps: true }
 );

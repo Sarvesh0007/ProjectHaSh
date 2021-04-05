@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { isVerified } = require("../controllers/userAuthentication");
 const { Doctor } = require("../models/doctorSchema");
-const { Patient } = require("../models/patientSchema");
+const { User } = require("../models/userSchema");
 
 const router = require("express").Router();
 
@@ -37,13 +37,13 @@ router.post("/appoint", (req, res) => {
     if (err) {
       throw err;
     }
-    Patient.findOne({ user: req.body.pid }).exec((err, patient) => {
+    User.findOne({ _id: req.body.pid }).exec((err, patient) => {
       if (err) {
         throw err;
       }
 
       doctor.Appointements.push({
-        patient: patient.user,
+        patient: patient._id,
         bookingtime: req.body.bookingtime,
       });
       doctor.save();
@@ -58,8 +58,9 @@ router.post("/appoint", (req, res) => {
 });
 
 router.get("/myappointments", [isVerified], async (req, res) => {
+  console.log(req.user._id);
   try {
-    Patient.findOne({ user: req.user._id })
+    User.findOne({ _id: req.user._id })
       .populate({
         path: "appointments",
         populate: {
@@ -71,6 +72,7 @@ router.get("/myappointments", [isVerified], async (req, res) => {
         if (err) {
           throw err;
         }
+        console.log(user);
         return res.render("myappointment", {
           Appointements: user.appointments,
         });

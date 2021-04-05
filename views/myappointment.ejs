@@ -2,20 +2,25 @@
 
 <div class="container my-5">
     <div class="row">
+     <% if(Appointements.length === 0) {%>
+      <h1>You have no appointements yet!!</h1> 
+      <% } else { %> 
         <% for(var i =0;i<Appointements.length;i++) { %>
-        <div class="col col-lg-4 col-md-8" >
-            <div class="card text-white bg-dark mb-3" style="max-width: 20rem;">
-                <div class="card-header"><%= Appointements[i].doctor.name %></div>
-                <div class="card-body">
-                  <h4 class="card-title"><%= Appointements[i].doctor.email %></h4>
-                  <h3 class="card-title">Yor appointment is scheduled <%= Appointements[i].bookingtime %> </h3>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            <button class="btn btn-large btn-primary">Booked</button>
-             
-          </div>         
-        </div>        
-        <% }%>
+          <div class="col col-lg-4 col-md-8" >
+              <div class="card text-white bg-dark mb-3" style="max-width: 20rem;">
+                
+                  <div class="card-header"><%= Appointements[i].doctor.name %></div>
+                  <div class="card-body">
+                    <h4 class="card-title"><%= Appointements[i].doctor.email %></h4>
+                    <h3 class="card-title">Your appointment is scheduled <%= Appointements[i].bookingtime %> </h3>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  </div>
+              <button class="btn btn-large btn-primary">Booked</button>
+               
+            </div>         
+          </div>        
+          <% }%>
+        <% } %> 
     </div>
 
     </div>
