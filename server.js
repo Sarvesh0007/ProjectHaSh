@@ -89,6 +89,7 @@ APP.use("/user", userAuthRoutes);
 APP.use("/admin", adminRoutes);
 APP.use("/patients", patientRoutes);
 APP.use("/doctors", doctorRoutes);
+APP.use("/about", (req, res) => res.render("About"));
 APP.get("/", (req, res) => {
   return res.render("Home");
 });
