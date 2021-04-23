@@ -41,14 +41,12 @@ const userSchema = new mongoose.Schema(
     Address: String,
     Prscriptions: [
       {
+        doctor: String,
+        date: String,
         Disease: String,
         Medicine: [
           {
-            Name: String,
-            Dosage: {
-              type: String,
-              enum: ["Day", "Afternoon", "Evening", "Night"],
-            },
+            type: String,
           },
         ],
       },

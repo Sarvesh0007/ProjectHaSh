@@ -1,0 +1,30 @@
+<h1>Prescriptions</h1>
+<div class="container">
+    <div class="row m-2">
+        <div class="col">
+            <% if(prescription) {%> 
+                <% for(var i=0;i<prescription.length;i++){ %> 
+                 <div class="card">
+                     <div class="card-header">
+                     <b>Disease</b>  <%= prescription[i].Disease %>
+                     </div>
+                    <% if(prescription[i].doctor) {%> 
+                        <div class="card-header">
+                            <b>Prescriptions By</b> Dr. <%= prescription[i].doctor %> </br>
+                            <b>Dated</b> <%= prescription[i].date.split(" ").slice(0,3).join(" ") %>
+                            </div>
+                    <% } %> 
+                     <div class="card-body">
+                         <h4>Medicine Prescribed </h4>
+                         <ul>
+                             <% for(var j=0;j<prescription[i].Medicine.length;j++) { %>
+                                <li><%= prescription[i].Medicine[j] %></li>
+                            <%} %>
+                         </ul>
+                     </div>
+                 </div>
+                    <% } %>
+            <% } %>
+        </div>
+    </div>
+</div>

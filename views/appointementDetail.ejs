@@ -1,0 +1,15 @@
+<div class="container">
+    <h1>Booking with <%= patient.name %></h1>
+    <form action="/doctors/addprescription" method="POST">
+        <input type="text" name="patientid" hidden value="<%= patient._id %>">
+        <div class="mb-3">
+          <label for="Disease" class="form-label">Disease/Problems</label>
+          <textarea type="text" name="Disease" class="form-control" id="Disease" aria-describedby="Disease"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="Medicine" class="form-label">Medicine</label>
+          <textarea type="text" name="Medicine" class="form-control" id="Medicine" ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+</div>>

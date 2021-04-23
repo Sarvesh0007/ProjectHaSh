@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { isVerified } = require("../controllers/userAuthentication");
 const { Doctor } = require("../models/doctorSchema");
 const { Patient } = require("../models/patientSchema");
+const { User } = require("../models/userSchema");
 
 const router = require("express").Router();
 router.get("/myappointments", [isVerified], async (req, res) => {
@@ -45,4 +46,38 @@ router.get("/removeappointments/:id", (req, res) => {
     console.log(error);
   }
 });
+
+router.get("/viewappointements/:id", (req, res) => {
+  User.findOne({ _id: req.params.id }, (err, user) => {
+    console.log(user);
+    return res.render("appointementDetail", { patient: user });
+  });
+});
+
+router.post("/addprescription", async (req, res) => {
+  const id = req.body.patientid;
+  delete req.body.patientid;
+  console.log(req.body);
+  User.findOne({ _id: id }, async (err, user) => {
+    if (!user) {
+      return res.status(400).send({ error: "Bad request" });
+    }
+    console.log({
+      Disease: req.body.Disease,
+      Medicine: req.body.Medicine.split(","),
+    });
+    user.Prscriptions.push({
+      doctor: req.user.name,
+      date: new Date().toUTCString(),
+      Disease: req.body.Disease,
+      Medicine: req.body.Medicine.split(","),
+    });
+    await user.save();
+    console.log(user);
+    req.flash("error", "visited successfully");
+
+    return res.redirect("/doctors/myappointments");
+  });
+});
+
 module.exports = router;

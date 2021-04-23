@@ -91,7 +91,7 @@ APP.use("/patients", patientRoutes);
 APP.use("/doctors", doctorRoutes);
 APP.use("/about", (req, res) => res.render("About"));
 APP.get("/", (req, res) => {
-  return res.render("Home");
+  return res.render("index");
 });
 APP.get("/test", [isVerified, isAdmin], (req, res) => {
   return res.send("You have Successfully Logged In");
@@ -114,6 +114,6 @@ APP.listen(PORT, (err) => {
   if (err) {
     console.log(err);
   } else {
-    console.log(`server started on port ${PORT}`);
+    console.log(`server started on port http://localhost:${PORT}`);
   }
 });

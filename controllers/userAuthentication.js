@@ -28,7 +28,7 @@ exports.signup = (req, res) => {
     "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$"
   );
   if (req.body.email.match(mailpattern)) {
-    User.findOne({ email: req.body.email })
+    User.findOne({ phone: req.body.phone })
       .then((user) => {
         if (!user) {
           // if user does not exist create the user
@@ -37,6 +37,7 @@ exports.signup = (req, res) => {
           console.log(newUser);
           return res.redirect("/user/login");
         }
+        // TODO: flash message
         return res.status(405).send({ error: "User already exist" });
       })
       .catch((err) => {
@@ -55,7 +56,7 @@ exports.signup = (req, res) => {
  */
 exports.isVerified = (req, res, next) => {
   if (!req.isAuthenticated()) {
-    return res.status(401).send("You are not allowed to view this page");
+    return res.redirect("/user/login");
   }
   next();
 };

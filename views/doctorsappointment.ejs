@@ -11,8 +11,9 @@
                   <h3 class="card-title">Timing is <%= Appointements[i].bookingtime %> </h3>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                 </div>
-            <button class="btn btn-large btn-primary">Booked</button>
-            <a href="/doctors/removeappointments/<%= Appointements[i]._id %>" class="btn btn-large btn-danger">Delete</a>
+                <!-- <button class="btn btn-large btn-primary">Booked</button> -->
+                <a href="/doctors/viewappointements/<%= Appointements[i].patient._id %>" class="btn btn-large btn-success">View Booking</a>
+                <a href="/doctors/removeappointments/<%= Appointements[i]._id %>" class="btn btn-large btn-danger">Delete</a>
              
           </div>         
         </div>        

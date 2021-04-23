@@ -12,7 +12,8 @@ const doctorDetail = {
     "Cardiologists are doctors who specialize in diagnosing and treating diseases or conditions of the heart and blood vessels—the cardiovascular system. You might also visit a cardiologist so you can learn about your risk factors for heart disease and find out what measures you can take for better heart health",
 };
 
-router.get("/bookDoctor", (req, res) => {
+router.get("/bookDoctor", isVerified, (req, res) => {
+  console.log("Book doctor");
   Doctor.find({})
     .populate("user")
     .exec((err, users) => {
@@ -42,19 +43,45 @@ router.post("/appoint", (req, res) => {
         throw err;
       }
 
-      doctor.Appointements.push({
-        patient: patient._id,
-        bookingtime: req.body.bookingtime,
+      const avaiableTimeSlot = {
+        "11:00AM-12:00PM": 5,
+        "12:05PM-1:05PM": 5,
+        "1:10PM-2:05PM": 5,
+        "2:10PM-3:05PM": 5,
+      };
+
+      doctor.Appointements.map((appoint) => {
+        if (
+          avaiableTimeSlot[appoint.bookingtime] &&
+          avaiableTimeSlot[appoint.bookingtime] > 0
+        ) {
+          avaiableTimeSlot[appoint.bookingtime] -= 1;
+        }
       });
-      doctor.save();
-      patient.appointments.push({
-        doctor: doctor.user,
-        bookingtime: req.body.bookingtime,
-      });
-      patient.save();
+      console.log(avaiableTimeSlot[req.body.bookingtime]);
+      console.log(avaiableTimeSlot);
+      if (avaiableTimeSlot[req.body.bookingtime] <= 0) {
+        req.flash("error", "booking slot not available");
+
+        return res.redirect("/patients/bookDoctor");
+      } else {
+        doctor.Appointements.push({
+          patient: patient._id,
+          bookingtime: req.body.bookingtime,
+        });
+        doctor.save();
+        patient.appointments.push({
+          doctor: doctor.user,
+          bookingtime: req.body.bookingtime,
+        });
+        patient.save();
+        req.flash("error", "booking confirmed");
+
+        return res.redirect("/patients/bookDoctor");
+      }
     });
   });
-  res.redirect("/patients/bookDoctor");
+  // return res.redirect("/patients/bookDoctor");
 });
 
 router.get("/myappointments", [isVerified], async (req, res) => {
@@ -85,5 +112,10 @@ router.get("/myappointments", [isVerified], async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+router.get("/viewprescription", [isVerified], async (req, res) => {
+  console.log(req.user.Prscriptions);
+  res.render("patientPrescription", { prescription: req.user.Prscriptions });
 });
 module.exports = router;
