@@ -23,6 +23,7 @@ router.get("/bookDoctor", isVerified, (req, res) => {
       users.map((user) => {
         return { ...user, selected: false };
       });
+      console.log(users);
       res.render("bookDoctors", {
         userobj: users,
         user: req.user,

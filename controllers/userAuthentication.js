@@ -49,7 +49,7 @@ exports.signup = (req, res) => {
 };
 
 /**
- *  middleware to verify wheather request comig is authenticated or no
+ *  middleware to verify wheather request coming is authenticated or no
  * @param {Request} req
  * @param {Response} response
  * @param {next} next
@@ -75,7 +75,7 @@ exports.userSignedin = (req, res, next) => {
 
 exports.isAdmin = (req, res, next) => {
   if (req.user.role !== 8990) {
-    return res.status(401).send("Unautorized user");
+    return res.status(401).send("Unauthorized user");
   }
   next();
 };

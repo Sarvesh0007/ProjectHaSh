@@ -58,6 +58,7 @@ router.post("/addprescription", async (req, res) => {
   const id = req.body.patientid;
   delete req.body.patientid;
   console.log(req.body);
+
   User.findOne({ _id: id }, async (err, user) => {
     if (!user) {
       return res.status(400).send({ error: "Bad request" });
