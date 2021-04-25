@@ -1,48 +1,41 @@
-<div class="to-center">
-  <div class="h2 mb-5">Hospital Management System</div>
+<html>
+    <head>
+    <link rel="stylesheet" type="text/css" href="/style_sign.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;1,100;1,300;1,400&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div class="wrapper">
+            <div class="reg_form">
+                <div class="heading">
+                LOGIN
+                </div>
   <%- include('partials/dismissiblealert.ejs') %>
-  <div class="row">
-    <div class="col">
-      <form action="/user/login" method="POST">
-        <fieldset>
-          <legend>Login</legend>
-          <div class="mb-3">
-            <label for="useremail" class="form-label">Email address</label>
-            <input
-              type="email"
-              class="form-control"
-              id="useremail"
-              name="email"
-              aria-describedby="emailHelp"
-              required
-            />
-            <div id="emailHelp" class="form-text">
-              We'll never share your email with anyone else.
+
+
+                <form action="/user/login" method="POST">
+                    <div class="form_wrap">
+                        <div class="inp_grp">
+
+                            <div class="inp_wrap">
+                                <label for="mail">Email</label>
+                                <input type="email"  name="email" id="mail">
+                            </div>
+
+                            <div class="inp_wrap">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password">
+                            </div>
+
+                            <button class="btn" type="submit" value="Submit">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-          </div>
-          <div class="mb-3">
-            <label for="userpassword" class="form-label">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="userpassword"
-              name="password"
-              required
-            />
-          </div>
-          <div class="mb-3 form-check">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="exampleCheck1"
-            />
-            <label class="form-check-label" for="exampleCheck1"
-              >Check me out</label
-            >
-          </div>
-          <button type="submit" class="btn btn-success">Submit</button>
-        </fieldset>
-      </form>
-    </div>
-  </div>
-</div>
+        </div>
+
+    </body>
+</html>
+
