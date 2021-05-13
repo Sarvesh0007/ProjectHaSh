@@ -52,6 +52,12 @@
             </li>
            
             <% } %>
+          <% if(user && user.role === 1) { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/patients/bookDoctor">Book Appointment</a>
+            </li>
+           
+            <% } %>
         </ul>
 
       <ul class="float-right navbar-nav">
